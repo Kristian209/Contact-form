@@ -5,15 +5,22 @@ $msgClass ="";
   //Check For Submit
 if(filter_has_var(INPUT_POST, 'submit')){
   //Get Form Data
-  $name = $_POST['name'];
-  $email = $_POST['email'];
-  $message = $_POST['message'];
+  $name = htmlspecialchars($_POST['name']);
+  $email = htmlspecialchars($_POST['email']);
+  $message = htmlspecialchars($_POST['message']);
 
   //Check Requiered Fields
   if(!empty($name) && !empty($email) && !empty($message)){
-    echo 'Message Submitted';
+    if(filter_var($email, FILTER_VALIDATE_EMAIL) === false){
+      $msg = 'Please provide a valid email';
+      $msgClass = 'alert-danger';
+    }
+    else{
+      $msg = 'Message submitted :)';
+      $msgClass = 'alert-success';
+    }
   }else{
-     $msg = 'Please fill in all fields';
+     $msg = 'Please fill in all the fields';
      $msgClass = 'alert-danger';
   }
 }
@@ -36,20 +43,20 @@ if(filter_has_var(INPUT_POST, 'submit')){
 </nav>
 <div class="container">
   <?php if($msg != ''): ?>
-  <div class="alert <?php echo $msgClass; ?>"<?php echo $msg ?></div>
+  <div class="alert <?php echo $msgClass; ?>"><?php echo $msg ?></div>
   <?php endif; ?>
  <form method="post" >
    <div class="form-group" action="<?php echo $_SERVER['PHP_SELF']; ?>">
     <label>Name</label>
-     <textarea type="text" value="" name="name" class="form-control"></textarea>
+     <input type="text" value="<?php echo isset($_POST['name']) ? $name : ''; ?>" name="name" class="form-control"></input>
    </div>
    <div class="form-group">
     <label>Email</label>
-     <textarea type="text" value="" name="email" class="form-control"></textarea>
+     <input type="text" value="<?php echo isset($_POST['email']) ? $email : ''; ?>" name="email" class="form-control"></input>
    </div>
    <div class="form-group">
     <label>Message</label>
-     <textarea type="text" value="" name="message" class="form-control"></textarea>
+     <textarea type="text" name="message" class="form-control"><?php echo isset($_POST['message']) ? $message : ''; ?></textarea>
    </div>
    <br>
   <button type="submit" name="submit" class="btn btn-primary">Submit</button>
