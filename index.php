@@ -18,6 +18,22 @@ if(filter_has_var(INPUT_POST, 'submit')){
     else{
       $msg = 'Message submitted :)';
       $msgClass = 'alert-success';
+      $toEmail = 'kristian@sunnerds.com';
+      $subject = 'Contact Request From '.$name;
+      $body = '<h2>Contact Request</h2>
+      <h4>Name</h4><p>.$name.</p>
+      <h4>Email</h4><p>.$email.</p>
+      <h4>Message</h4><p>.$name.</p>';
+      $headers = "MIME-Version: 1.0" . "\r\n";
+      $headers .= "Content-type:text/html;charset=UTF-8" . "\r\n";
+      $headers .= "From: " . $name . "<". $email . ">" . "\r\n";
+      if(mail($toEmail, $subject, $body, $headers)){
+        $msg = 'Email sent :)';
+        $msgClass = 'alert-success';
+      }else{
+        $msg = 'Your email couldn\'t be sent';
+        $msgClass = 'alert-danger';
+      }
     }
   }else{
      $msg = 'Please fill in all the fields';
